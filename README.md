@@ -1,1 +1,3 @@
-# SuperCommerciall
+# super_commercial_app
+
+A new Flutter project.
