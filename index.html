@@ -2,106 +2,132 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Super Commercial Web</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Commercial</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <div id="app">
-        <div id="login-view" class="view">
-            <div class="login-container">
-                <div class="login-card">
-                    <div class="login-header">
-                        <i class="fas fa-box-open fa-3x"></i>
-                        <h2>Super Commercial</h2>
-                        <p>Connectez-vous pour continuer</p>
+    <!-- App Container -->
+    <div id="app" class="app-container">
+        <!-- Auth View -->
+        <div id="auth-view" class="view hidden">
+            <div class="auth-card">
+                <h2>Connexion</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Utilisateur</label>
+                        <input type="text" id="login-username" required>
                     </div>
-                    <form id="login-form">
-                        <div class="form-group">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="login-username" placeholder="Identifiant" required>
-                        </div>
-                        <div class="form-group">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="login-password" placeholder="Mot de passe" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="login-btn">
-                            Se connecter
-                        </button>
-                        <div id="login-error" class="error-msg"></div>
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </button>
+                    <div id="login-error" class="error-msg hidden"></div>
+                </form>
             </div>
         </div>
 
+        <!-- Main App View -->
         <div id="main-view" class="view hidden">
+            
+            <!-- Sidebar (Desktop) -->
             <aside class="sidebar">
                 <div class="sidebar-header">
-                    <h2>Super Commercial</h2>
-                    <div id="user-info"></div>
+                    <h3>SUPER COMMERCIAL</h3>
                 </div>
                 <nav class="sidebar-nav">
-                    <a href="#dashboard" class="nav-item active" data-route="dashboard"><i class="fas fa-home"></i> Accueil</a>
-                    <a href="#ventes" class="nav-item" data-route="ventes"><i class="fas fa-shopping-cart"></i> Ventes</a>
-                    <a href="#achats" class="nav-item" data-route="achats"><i class="fas fa-truck-loading"></i> Achats</a>
-                    <a href="#produits" class="nav-item" data-route="produits"><i class="fas fa-box"></i> Produits</a>
-                    <a href="#clients" class="nav-item" data-route="clients"><i class="fas fa-users"></i> Clients</a>
-                    <a href="#fournisseurs" class="nav-item" data-route="fournisseurs"><i class="fas fa-truck"></i> Fournisseurs</a>
-                    <a href="#charges" class="nav-item" data-route="charges"><i class="fas fa-file-invoice-dollar"></i> Charges</a>
-                    <a href="#caisse" class="nav-item" data-route="caisse"><i class="fas fa-cash-register"></i> Caisse</a>
-                    <a href="#situation" class="nav-item" data-route="situation"><i class="fas fa-chart-line"></i> Situation</a>
-                    <a href="#statistiques" class="nav-item" data-route="statistiques"><i class="fas fa-chart-bar"></i> Stats</a>
+                    <a href="#dashboard" class="nav-item active"><i class="fas fa-home"></i> Dashboard</a>
+                    <a href="#ventes" class="nav-item"><i class="fas fa-shopping-cart"></i> Ventes</a>
+                    <a href="#achats" class="nav-item"><i class="fas fa-shopping-bag"></i> Achats</a>
+                    <a href="#produits" class="nav-item"><i class="fas fa-box"></i> Produits</a>
+                    <a href="#clients" class="nav-item"><i class="fas fa-users"></i> Clients</a>
+                    <a href="#fournisseurs" class="nav-item"><i class="fas fa-truck"></i> Fournisseurs</a>
+                    <a href="#versements" class="nav-item"><i class="fas fa-money-bill-wave"></i> Versements</a>
+                    <a href="#situation" class="nav-item"><i class="fas fa-chart-line"></i> Situation</a>
+                    <a href="#charges" class="nav-item"><i class="fas fa-minus-circle"></i> Charges</a>
+                    <a href="#caisse" class="nav-item"><i class="fas fa-cash-register"></i> Caisse</a>
+                    <a href="#statistiques" class="nav-item"><i class="fas fa-chart-pie"></i> Statistiques</a>
+                    <a href="#scanner" class="nav-item mobile-hidden"><i class="fas fa-barcode"></i> Scanner</a>
                 </nav>
-                <div class="sidebar-footer">
-                    <button id="logout-btn" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Quitter</button>
-                </div>
             </aside>
 
+            <!-- Main Content Area -->
             <main class="main-content">
-                <header class="topbar">
-                    <h1 id="page-title">Tableau de bord</h1>
-                    <button id="chatbot-toggle" class="btn btn-circle"><i class="fas fa-robot"></i></button>
+                <!-- Header -->
+                <header class="top-header">
+                    <div class="header-left">
+                        <button id="btn-menu-toggle" class="btn-icon mobile-only"><i class="fas fa-bars"></i></button>
+                        <h2 id="page-title">Dashboard</h2>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <span id="user-name">User</span>
+                            <span id="user-company" class="badge">Société</span>
+                        </div>
+                        <button id="btn-profile" class="btn-icon" title="Profil"><i class="fas fa-user-circle"></i></button>
+                        <button id="btn-about" class="btn-icon" title="À propos"><i class="fas fa-info-circle"></i></button>
+                        <button id="btn-logout" class="btn-icon text-danger" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
                 </header>
-                
-                <div id="route-content" class="content-container">
+
+                <!-- Page Container -->
+                <div id="page-container" class="page-container">
+                    <!-- Dynamic content will be loaded here -->
                 </div>
             </main>
 
+            <!-- Bottom Navigation (Mobile) -->
             <nav class="bottom-nav">
-                <a href="#dashboard" class="bnav-item active" data-route="dashboard"><i class="fas fa-home"></i><span>Accueil</span></a>
-                <a href="#ventes" class="bnav-item" data-route="ventes"><i class="fas fa-shopping-cart"></i><span>Ventes</span></a>
-                
-                <div class="bnav-item scanner-wrapper">
-                    <button id="fab-scanner" class="fab"><i class="fas fa-barcode"></i></button>
-                    <span>Scanner</span>
-                </div>
-
-                <a href="#produits" class="bnav-item" data-route="produits"><i class="fas fa-box"></i><span>Produits</span></a>
-                <a href="#menu" class="bnav-item" data-route="menu"><i class="fas fa-bars"></i><span>Menu</span></a>
+                <a href="#dashboard" class="nav-item"><i class="fas fa-home"></i></a>
+                <a href="#ventes" class="nav-item"><i class="fas fa-shopping-cart"></i></a>
+                <a href="#scanner" class="nav-item scanner-btn"><i class="fas fa-barcode"></i></a>
+                <a href="#produits" class="nav-item"><i class="fas fa-box"></i></a>
+                <a href="#more" class="nav-item" id="btn-mobile-more"><i class="fas fa-bars"></i></a>
             </nav>
         </div>
         
-        <div id="scanner-overlay" class="overlay hidden">
-            <div class="scanner-container">
-                <div class="scanner-header">
-                    <h3>Scanner un code-barres</h3>
-                    <button id="close-scanner" class="btn btn-icon"><i class="fas fa-times"></i></button>
-                </div>
-                <div id="reader"></div>
-            </div>
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p id="loading-text">Chargement...</p>
         </div>
     </div>
 
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- Modals Container -->
+    <div id="modals-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/session.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/ventes.js"></script>
+    <script src="js/achats.js"></script>
+    <script src="js/clients.js"></script>
+    <script src="js/fournisseurs.js"></script>
+    <script src="js/versements.js"></script>
+    <script src="js/situation.js"></script>
+    <script src="js/charges.js"></script>
+    <script src="js/caisse.js"></script>
+    <script src="js/statistiques.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/pdf.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/app.js"></script>
-    <!-- Modules -->
-    <script src="js/modules/dashboard.js"></script>
-    <script src="js/modules/scanner.js"></script>
-    <script src="js/modules/produits.js"></script>
-    <!-- We will add other modules later -->
 </body>
 </html>
