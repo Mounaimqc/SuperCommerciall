@@ -1,66 +1,56 @@
-﻿const API_URL = "http://localhost:3000/api/proxy?url=";
-const REAL_API_URL = "https://app.logiciely.com/";
+// API interaction
 
-class ApiClient {
-    static async get(endpoint, params = {}) {
-        const user = Auth.getUser();
-        if (!user) throw new Error("Non connecté");
+const PROXY_URL = '/api/proxy?url=';
+const LOGIN_URL = 'https://app.logiciely.com/Login.php';
 
-        const queryStr = new URLSearchParams(params).toString();
-        const separator = endpoint.includes("?") ? "&" : "?";
-        const finalEndpoint = endpoint + (queryStr ? separator + queryStr : "");
-        const targetUrl = encodeURIComponent(`${REAL_API_URL}${user.apiPath}${finalEndpoint}`);
-        
-        return await this.request(targetUrl, "GET");
-    }
-
-    static async post(endpoint, data = {}) {
-        const user = Auth.getUser();
-        if (!user) throw new Error("Non connecté");
-
-        const targetUrl = encodeURIComponent(`${REAL_API_URL}${user.apiPath}${endpoint}`);
-        return await this.request(targetUrl, "POST", data);
-    }
-
-    static async login(username, password) {
-        const targetUrl = encodeURIComponent(`${REAL_API_URL}Login.php?Login=${username}&MotDePasse=${password}`);
-        return await this.request(targetUrl, "GET");
-    }
-
-    static async request(targetUrl, method, data = null) {
+const API = {
+    // Perform authentication
+    login: async (username, password) => {
         try {
-            const options = {
-                method: method,
+            // Encode parameters manually to match PHP expectations if needed, but proxy passes them correctly
+            const targetUrl = `${LOGIN_URL}?Login=${encodeURIComponent(username)}&MotDePasse=${encodeURIComponent(password)}`;
+            const response = await fetch(PROXY_URL + encodeURIComponent(targetUrl), {
+                method: 'GET',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Accept': 'application/json'
                 }
-            };
+            });
+            
+            if (!response.ok) throw new Error('Erreur de connexion au serveur');
+            
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw new Error('Connexion impossible');
+        }
+    },
 
-            if (data && method !== "GET") {
-                options.body = JSON.stringify(data);
-            }
-
-            const response = await fetch(`${API_URL}${targetUrl}`, options);
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    Auth.logout();
+    // Generic fetch through proxy
+    get: async (endpoint) => {
+        const baseUrl = Session.getBaseUrl();
+        if (!baseUrl) throw new Error('Session expirée');
+        
+        try {
+            const targetUrl = `${baseUrl}${endpoint}`;
+            const response = await fetch(PROXY_URL + encodeURIComponent(targetUrl), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*'
                 }
-                throw new Error(`Erreur réseau: ${response.status}`);
-            }
-
-            // Pour Login.php qui renvoie des donnأ©es avec UTF-8 BOM parfois
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch(e) {
-                return text; // Retourner le texte brut si ce n est pas du json
+            });
+            
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return await response.json();
+            } else {
+                return await response.text(); // Some endpoints return plain text code
             }
         } catch (error) {
-            console.error("[API Error]", error);
-            throw error;
+            console.error('API GET error:', error);
+            throw new Error('Serveur indisponible');
         }
     }
-}
-window.ApiClient = ApiClient;
-
+};

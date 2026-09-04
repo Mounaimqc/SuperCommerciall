@@ -1,0 +1,1 @@
+const Scanner = { render: (container) => { container.innerHTML = '<h2>Scanner</h2><p>Module en construction.</p>'; } };

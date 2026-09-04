@@ -1,0 +1,1 @@
+const Charges = { render: (container) => { container.innerHTML = '<h2>Charges</h2><p>Module en construction.</p>'; } };

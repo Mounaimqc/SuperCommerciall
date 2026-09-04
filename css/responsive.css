@@ -1,86 +1,49 @@
-/* Mobile Devices */
+/* Mobile adjustments */
 @media (max-width: 768px) {
     .sidebar {
         display: none;
     }
-
-    #main-view {
-        flex-direction: column;
-    }
-
-    .main-content {
-        height: calc(100vh - var(--bnav-height));
-    }
-
+    
     .bottom-nav {
         display: flex;
-        height: var(--bnav-height);
-        background: var(--card-bg);
-        border-top: 1px solid var(--border-color);
         justify-content: space-around;
         align-items: center;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 100;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     }
-
-    .bnav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-decoration: none;
-        color: var(--text-muted);
-        font-size: 0.8rem;
-        gap: 5px;
+    
+    .bottom-nav .nav-item {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        padding: 0.5rem;
     }
-
-    .bnav-item.active {
+    
+    .bottom-nav .nav-item.active {
         color: var(--primary-color);
     }
-
-    .bnav-item i {
-        font-size: 1.2rem;
+    
+    .page-container {
+        padding-bottom: calc(var(--bottom-nav-height) + 1rem);
     }
-
-    .scanner-wrapper {
-        position: relative;
+    
+    .mobile-only {
+        display: inline-block !important;
     }
-
-    .scanner-wrapper span {
-        position: absolute;
-        bottom: -18px;
-        white-space: nowrap;
+    
+    .mobile-hidden {
+        display: none !important;
+    }
+    
+    .header-left h2 {
+        font-size: 1.25rem;
+    }
+    
+    #user-company {
+        display: none;
     }
 }
 
-/* Scanner Overlay */
-.overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.scanner-container {
-    background: white;
-    width: 95%;
-    max-width: 500px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-.scanner-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #ddd;
-}
-#reader {
-    width: 100%;
-    min-height: 300px;
+/* Desktop adjustments */
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
 }

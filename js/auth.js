@@ -1,46 +1,50 @@
-﻿class Auth {
-    static getUser() {
-        const userStr = localStorage.getItem("sc_user");
-        if (!userStr) return null;
-        const user = JSON.parse(userStr);
-        // Check if expired
-        if (user.expireAt && new Date(user.expireAt) < new Date()) {
-            this.logout();
-            return null;
-        }
-        return user;
-    }
+// Auth logic
 
-    static setUser(userData) {
-        if (!userData || !userData.Lien) return false;
+const Auth = {
+    init: () => {
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('btn-logout');
         
-        // Nettoyer les donnأ©es
-        let apiPath = userData.Lien.trim();
-        if (apiPath.endsWith("/")) {
-            apiPath = apiPath.slice(0, -1);
+        if (loginForm) {
+            loginForm.addEventListener('submit', Auth.handleLogin);
         }
-        // Retirer le nom de domaine s il y est
-        apiPath = apiPath.replace("https://app.logiciely.com/", "").replace("http://app.logiciely.com/", "");
-        if (!apiPath.endsWith("/")) apiPath += "/";
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', Auth.handleLogout);
+        }
+    },
 
-        const user = {
-            id: userData.ID,
-            nom: userData.Nom,
-            status: userData.Status,
-            apiPath: apiPath,
-            dateFin: userData.DateFin,
-            // set expiration in 24h
-            expireAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-        };
+    handleLogin: async (e) => {
+        e.preventDefault();
+        const usernameInput = document.getElementById('login-username').value;
+        const passwordInput = document.getElementById('login-password').value;
+        const errorDiv = document.getElementById('login-error');
+        
+        errorDiv.classList.add('hidden');
+        Utils.showLoading('Connexion...');
+        
+        try {
+            const result = await API.login(usernameInput, passwordInput);
+            
+            if (result.success && result.Status === 'active') {
+                Session.setUser(result);
+                App.showMainView();
+            } else {
+                errorDiv.textContent = result.message || 'Identifiants incorrects ou compte inactif.';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (error) {
+            errorDiv.textContent = error.message;
+            errorDiv.classList.remove('hidden');
+        } finally {
+            Utils.hideLoading();
+        }
+    },
 
-        localStorage.setItem("sc_user", JSON.stringify(user));
-        return true;
+    handleLogout: () => {
+        if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+            Session.clear();
+            App.showAuthView();
+        }
     }
-
-    static logout() {
-        localStorage.removeItem("sc_user");
-        window.location.reload();
-    }
-}
-window.Auth = Auth;
-
+};
